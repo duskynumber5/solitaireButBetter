@@ -72,10 +72,9 @@ function GrabberClass:release()
 
     if self.stackCard then
         if self.stackCard.position.x < 500 and self.stackCard.position.y == 50 then
-            if self.stackCard.color == self.heldObject.color then
-                isValidReleasePosition = false
-            elseif self.stackCard.rank ~= ranks[self.heldObject.rank] + 1 then
-                isValidReleasePosition = false
+            if self.stackCard.color == self.heldObject.color and 
+            getRankIndex(self.stackCard.rank) == getRankIndex(self.heldObject.rank) + 1 then
+                isValidReleasePosition = true
             else
                 isValidReleasePosition = true
                 self.heldObject.position.x = self.stackCard.position.x
@@ -173,4 +172,11 @@ function checkForCardOn()
             break
         end
     end
+end
+
+function getRankIndex(rank)
+    for i, r in ipairs(ranks) do
+        if r == rank then return i end
+    end
+    return nil
 end
