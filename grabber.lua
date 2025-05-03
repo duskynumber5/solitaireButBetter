@@ -101,9 +101,19 @@ function GrabberClass:release()
 
     local pos = checkForCardOver()
     if pos and not self.stackCard then
-        isValidReleasePosition = true
-        self.heldObject.position.x = pos.x
-        self.heldObject.position.y = pos.y
+        if pos.y == 50 then
+            if self.heldObject.rank == "A" then
+                isValidReleasePosition = true
+                self.heldObject.position.x = pos.x
+                self.heldObject.position.y = pos.y
+            else
+                isValidReleasePosition = false
+            end
+        else
+            isValidReleasePosition = true
+            self.heldObject.position.x = pos.x
+            self.heldObject.position.y = pos.y
+        end
     end
 
     if isValidReleasePosition == false then
