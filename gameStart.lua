@@ -19,16 +19,13 @@ function GameClass:cards()
     
     for i=1, #suits do
         for j=1, #ranks do
-            table.insert(cards, love.graphics.newImage("sprites/" .. suits[i] .. ranks[j] .. ".png"))
-            cards.suit = suits[i]
-            cards.rank = ranks[j]
-            
-            if cards.suit == "S" or cards.suit == "C" then
-                cards.color = 1 -- black
-            else
-                cards.color = 0 -- red
-            end
-
+            local card = {
+                image = love.graphics.newImage("sprites/" .. suits[i] .. ranks[j] .. ".png"),
+                suit = suits[i],
+                rank = ranks[j],
+                color = (suits[i] == "S" or suits[i] == "C") and 1 or 0
+            }
+            table.insert(cards, card)
         end
     end
 
@@ -40,18 +37,18 @@ function GameClass:cards()
     mouseWasDown = false
 
     validPos = {
-        {x = 740, y = 250, w = cards[3]:getWidth() + 5, h = cards[3]:getHeight() + 32},
-        {x = 630, y = 250, w = cards[3]:getWidth() + 5, h = cards[3]:getHeight() + 32},
-        {x = 520, y = 250, w = cards[3]:getWidth() + 5, h = cards[3]:getHeight() + 32},
-        {x = 410, y = 250, w = cards[3]:getWidth() + 5, h = cards[3]:getHeight() + 32},
-        {x = 300, y = 250, w = cards[3]:getWidth() + 5, h = cards[3]:getHeight() + 32},
-        {x = 190, y = 250, w = cards[3]:getWidth() + 5, h = cards[3]:getHeight() + 32},
-        {x = 80, y = 250, w = cards[3]:getWidth() + 5, h = cards[3]:getHeight() + 32},
+        {x = 740, y = 250, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
+        {x = 630, y = 250, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
+        {x = 520, y = 250, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
+        {x = 410, y = 250, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
+        {x = 300, y = 250, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
+        {x = 190, y = 250, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
+        {x = 80, y = 250, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
 
-        {x = 36, y = 50, w = cards[3]:getWidth() + 5, h = cards[3]:getHeight() + 32},
-        {x = 146, y = 50, w = cards[3]:getWidth() + 5, h = cards[3]:getHeight() + 32},
-        {x = 256, y = 50, w = cards[3]:getWidth() + 5, h = cards[3]:getHeight() + 32},
-        {x = 366, y = 50, w = cards[3]:getWidth() + 5, h = cards[3]:getHeight() + 32},
+        {x = 36, y = 50, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
+        {x = 146, y = 50, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
+        {x = 256, y = 50, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
+        {x = 366, y = 50, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
     }
 
     return cards
@@ -137,33 +134,38 @@ function GameClass:update()
 end
 
 function GameClass:draw()
+    -- draw  stack
+    love.graphics.rectangle("line", 840 + 14, 50, cards[3].image:getWidth() + 5, cards[3].image:getHeight() + 32, 6 ,6)
+
      -- 7 stack placements
      x = 740
      y = 250
      for i = 7, 1, -1 do
-         love.graphics.rectangle("line", x + 14, y, cards[3]:getWidth() + 5, cards[3]:getHeight() + 32, 6 ,6)
+         love.graphics.rectangle("line", x + 14, y, cards[3].image:getWidth() + 5, cards[3].image:getHeight() + 32, 6 ,6)
          x = x - (110) 
      end
- 
+     
      -- suit stacks
      x = 50
      for i = 4, 1, -1 do
-         love.graphics.rectangle("line", x, 50, cards[3]:getWidth() + 5, cards[3]:getHeight() + 32, 6, 6)
+         love.graphics.rectangle("line", x, 50, cards[3].image:getWidth() + 5, cards[3].image:getHeight() + 32, 6, 6)
          x = x + (110)
      end
  
-     -- draw  stack
-     love.graphics.rectangle("line", 840 + 14, 50, cards[3]:getWidth() + 5, cards[3]:getHeight() + 32, 6 ,6)
- 
-     for _, card in ipairs(drawCards) do
-         card:draw() 
-     end
      
      for _, card in ipairs(cardTable) do
-         card:draw()  
-     end
- 
+        card:draw()  
+    end
+    
+    for _, card in ipairs(drawCards) do
+        card:draw() 
+    end
  
      love.graphics.setColor(1, 1, 1, 1)
      love.graphics.print("Mouse: " .. tostring(grabber.currentMousePos.x) .. ", " .. tostring(grabber.currentMousePos.y))
+     
+     if grabber.heldObject then
+        love.graphics.print("Card: " .. tostring(grabber.heldObject.suit) .. ", " .. tostring(grabber.heldObject.rank) .. ", " .. tostring(grabber.heldObject.color), 100, 100)
+     end
+
 end

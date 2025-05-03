@@ -20,9 +20,9 @@ function CardClass:new(xPos, yPos, faceUp, counter)
     card.grabbable = true
     card.counter = counter
 
-    card.suit = cards.suit
-    card.rank = cards.rank
-    card.color = cards.color
+    card.suit = nil
+    card.rank = nil
+    card.color = nil
 
     return card
 end
@@ -32,8 +32,8 @@ function CardClass:update()
 end
 
 function CardClass:draw()
-    width = cards[3]:getWidth()
-    height = cards[3]:getHeight()
+    width = cards[3].image:getWidth()
+    height = cards[3].image:getHeight()
 
     if self.state ~= CARD_STATE.IDLE and self.faceUp == 1 then
         love.graphics.setColor(0, 0, 0, 0.8) 
@@ -43,12 +43,15 @@ function CardClass:draw()
 
     love.graphics.setColor(1, 1, 1 ,1)
 
+    local cardFace = cards[self.counter]
+
     if self.faceUp == 0 then
         love.graphics.draw(cardBack, self.position.x, self.position.y, 0, 1.5, 1.5)
-    end
-
-    if self.faceUp == 1 then
-        love.graphics.draw(cards[self.counter], self.position.x, self.position.y, 0, 1.5, 1.5)
+    else
+        love.graphics.draw(cardFace.image, self.position.x, self.position.y, 0, 1.5, 1.5)
+        self.suit = cardFace.suit
+        self.rank = cardFace.rank
+        self.color = cardFace.color
     end
 
     love.graphics.print(tostring(self.state), self.position.x + 20, self.position.y - 20)
