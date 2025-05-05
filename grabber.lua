@@ -110,9 +110,13 @@ function GrabberClass:release()
                 isValidReleasePosition = false
             end
         else
-            isValidReleasePosition = true
-            self.heldObject.position.x = pos.x
-            self.heldObject.position.y = pos.y
+            if self.heldObject.rank == "K" then
+                isValidReleasePosition = true
+                self.heldObject.position.x = pos.x
+                self.heldObject.position.y = pos.y
+            else
+                isValidReleasePosition = false
+            end
         end
     end
 
