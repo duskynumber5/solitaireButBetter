@@ -35,3 +35,13 @@ function checkForMouseMoving()
         card:checkForMouseOver(grabber)
     end
 end
+
+function love.keypressed(key)
+    if key == "r" then
+        love.load()
+    end
+
+    if key == "escape" then
+        love.event.quit()
+    end
+end

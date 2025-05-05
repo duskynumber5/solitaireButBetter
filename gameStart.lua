@@ -5,7 +5,7 @@ require "grabber"
 
 GameClass = {}
 
-love.window.setMode(960, 640)
+love.window.setMode(1000, 640)
 love.graphics.setBackgroundColor(0, 0.7, 0.2, 1)
 love.window.setTitle("solitaire!")
 math.randomseed(os.time())
@@ -109,7 +109,7 @@ function GameClass:update()
         if card.position.x ~= 740 and card.position.x ~= 710 and card.position.x ~= 680  and card.state == CARD_STATE.IDLE then
             table.insert(cardTable, card)
             table.remove(drawCards, i)
-            table.remove(cardStack, i)
+            table.remove(cardStack, cardStack[card])
         end
     end
 
@@ -162,7 +162,9 @@ function GameClass:draw()
     end
  
      love.graphics.setColor(1, 1, 1, 1)
-     love.graphics.print("Mouse: " .. tostring(grabber.currentMousePos.x) .. ", " .. tostring(grabber.currentMousePos.y))
+     love.graphics.print("Mouse: " .. tostring(grabber.currentMousePos.x) .. ", " .. tostring(grabber.currentMousePos.y), 5)
+     love.graphics.print("Press 'R' to reset", 5, 15)
+     love.graphics.print("Press 'ESC' to quit", 5, 30)
      
      if grabber.heldObject then
         love.graphics.print("Card: " .. tostring(grabber.heldObject.suit) .. ", " .. tostring(grabber.heldObject.rank) .. ", " .. tostring(grabber.heldObject.color), 100, 100)

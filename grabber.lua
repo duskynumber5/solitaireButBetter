@@ -88,9 +88,7 @@ function GrabberClass:release()
 
     if self.stackCard then
         if self.stackCard.position.x < 500 and self.stackCard.position.y == 50 then
-            if self.heldStack then
-                isValidReleasePosition = false
-            elseif self.stackCard.suit == self.heldObject.suit and 
+            if self.stackCard.suit == self.heldObject.suit and 
             getRankIndex(self.stackCard.rank) == getRankIndex(self.heldObject.rank) - 1 then
                 isValidReleasePosition = true
                 self.heldObject.position.x = self.stackCard.position.x
@@ -112,7 +110,6 @@ function GrabberClass:release()
                         c.position.y = self.heldObject.position.y + (30 * (i - 1))
                     end
                 end
-                --self.stackCard.grabbable = false
             else
                 isValidReleasePosition = false
             end
