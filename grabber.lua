@@ -30,8 +30,16 @@ function GrabberClass:update()
     
     -- click
     if love.mouse.isDown(1) and self.heldObject then
-        self.heldObject.position.x = self.currentMousePos.x - 25
-        self.heldObject.position.y = self.currentMousePos.y - 25
+        self.heldObject.position.x = self.currentMousePos.x - 30
+        self.heldObject.position.y = self.currentMousePos.y - 30
+        if #self.heldStack > 1 then
+            for i, c in ipairs(self.heldStack) do
+                if c ~= self.heldObject then
+                    c.position.x = self.heldObject.position.x
+                    c.position.y = self.heldObject.position.y + (30 * (i-1))
+                end
+            end
+        end
     end
     -- release
     if not love.mouse.isDown(1) and self.grabPos ~= nil then
@@ -43,6 +51,8 @@ end
 function GrabberClass:grab(card)
     self.grabPos = self.currentMousePos
     self.heldObject = card
+    self.heldStack = getStackedCards(card)
+
 
     self.heldObject.state = CARD_STATE.GRABBED
     
@@ -51,15 +61,21 @@ function GrabberClass:grab(card)
         self.heldObject.position.y
     )
 
-    for i, c in ipairs(cardTable) do
-        if c == card then
-            table.remove(cardTable, i)
-            table.insert(cardTable, card)
-            break
+    if card.position.y > 50 then
+        for _, c in ipairs(self.heldStack) do
+            for i = #cardTable, 1, -1 do
+                if cardTable[i] == c then
+                    table.remove(cardTable, i)
+                end
+            end
+        end
+        
+        for _, c in ipairs(self.heldStack) do
+            table.insert(cardTable, c)
         end
     end
     
-    checkForCardOn()
+    checkIfCardBelow()
 end
 
 function GrabberClass:release()
@@ -72,7 +88,9 @@ function GrabberClass:release()
 
     if self.stackCard then
         if self.stackCard.position.x < 500 and self.stackCard.position.y == 50 then
-            if self.stackCard.suit == self.heldObject.suit and 
+            if self.heldStack then
+                isValidReleasePosition = false
+            elseif self.stackCard.suit == self.heldObject.suit and 
             getRankIndex(self.stackCard.rank) == getRankIndex(self.heldObject.rank) - 1 then
                 isValidReleasePosition = true
                 self.heldObject.position.x = self.stackCard.position.x
@@ -87,8 +105,14 @@ function GrabberClass:release()
             getRankIndex(self.stackCard.rank) == getRankIndex(self.heldObject.rank) + 1 then
                 isValidReleasePosition = true
                 self.heldObject.position.x = self.stackCard.position.x
-                self.heldObject.position.y = self.stackCard.position.y + 25
-                self.stackCard.grabbable = false
+                self.heldObject.position.y = self.stackCard.position.y + 30
+                for i, c in ipairs(self.heldStack) do
+                    if c ~= self.heldObject then
+                        c.position.x = self.heldObject.position.x
+                        c.position.y = self.heldObject.position.y + (30 * (i - 1))
+                    end
+                end
+                --self.stackCard.grabbable = false
             else
                 isValidReleasePosition = false
             end
@@ -114,6 +138,12 @@ function GrabberClass:release()
                 isValidReleasePosition = true
                 self.heldObject.position.x = pos.x
                 self.heldObject.position.y = pos.y
+                for i, c in ipairs(self.heldStack) do
+                    if c ~= self.heldObject then
+                        c.position.x = self.heldObject.position.x
+                        c.position.y = self.heldObject.position.y + (30 * (i - 1))
+                    end
+                end
             else
                 isValidReleasePosition = false
             end
@@ -122,6 +152,12 @@ function GrabberClass:release()
 
     if isValidReleasePosition == false then
         self.heldObject.position = self.heldObject.start
+        for i, c in ipairs(self.heldStack) do
+            if c ~= self.heldObject then
+                c.position.x = self.heldObject.position.x
+                c.position.y = self.heldObject.position.y + (30 * (i - 1))
+            end
+        end
     end
 
     if self.cardUnder and isValidReleasePosition then
@@ -145,7 +181,6 @@ function GrabberClass:release()
                 self.cardUnder.grabbable = true
             end
         end
-
     end    
 
     self.heldObject.state = 0
@@ -154,6 +189,8 @@ function GrabberClass:release()
     self.cardUnder = nil
     
     self.heldObject = nil
+    self.heldStack = nil
+    grabbedStack = {}
     self.grabPos = nil
 end
 
@@ -177,13 +214,12 @@ function checkForCardOver()
             if not occupied then
                 return pos
             end
-
         end
     end
     return nil
 end
 
-function checkForCardOn()
+function checkIfCardBelow()
     grabber.cardUnder = nil
     for _, c in ipairs(cardTable) do
         if c ~= grabber.heldObject and
@@ -195,9 +231,52 @@ function checkForCardOn()
     end
 end
 
+function getStackedCards(card)
+    grabbedStack = {}
+    table.insert(grabbedStack, card)
+
+    local currentY = card.position.y
+    local x = card.position.x
+
+    while true do
+        local found = nil
+        for _, other in ipairs(cardTable) do
+            if other ~= card and
+               other.position.x == x and
+               math.abs(other.position.y - currentY - 30) <= 5 and
+               other.faceUp == 1 then
+                found = other
+                break
+            end
+        end
+
+        if found then
+            table.insert(grabbedStack, found)
+            currentY = found.position.y
+            card = found
+        else
+            break
+        end
+    end
+
+    return grabbedStack
+end
+
 function getRankIndex(rank)
     for i, r in ipairs(ranks) do
         if r == rank then return i end
     end
     return nil
 end
+
+
+--[[
+else
+    grabbedStack = {}
+    local currentCard = grabber.heldObject
+    while hasCardOnTop == true do
+        table.insert(grabbedStack, currentCard)
+        currentCard = self
+        checkForMouseOver()
+    end
+]]--
