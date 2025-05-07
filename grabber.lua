@@ -265,15 +265,3 @@ function getRankIndex(rank)
     end
     return nil
 end
-
-
---[[
-else
-    grabbedStack = {}
-    local currentCard = grabber.heldObject
-    while hasCardOnTop == true do
-        table.insert(grabbedStack, currentCard)
-        currentCard = self
-        checkForMouseOver()
-    end
-]]--

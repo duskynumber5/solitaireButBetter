@@ -35,7 +35,7 @@ function CardClass:draw()
     width = cards[3].image:getWidth()
     height = cards[3].image:getHeight()
 
-    if self.state ~= CARD_STATE.IDLE and self.faceUp == 1 then
+    if self.state ~= CARD_STATE.IDLE and self.grabbable == true and self.faceUp == 1 then
         love.graphics.setColor(0, 0, 0, 0.8) 
         local offset = 18 * (self.state == CARD_STATE.GRABBED and 2 or 1)
         love.graphics.rectangle("fill", self.position.x + offset, (self.position.y - 12) + offset, width + 10, height + 30, 6, 6)
@@ -94,23 +94,23 @@ function CardClass:checkForMouseOver()
 end
 
 function CardClass:draw3()
-    drawCards = {}
+    wasteCards = {}
     local drawX = 740
     local drawY = 50
 
-    for i = #cardStack, #cardStack - 2, -1 do
-        if #cardStack == 0 then break end
+    for i = #drawPile, #drawPile - 2, -1 do
+        if #drawPile == 0 then break end
 
-        if stackTraverse > #cardStack then
+        if stackTraverse > #drawPile then
             stackTraverse = 1
         end
 
-        local index = cardStack[stackTraverse]
+        local index = drawPile[stackTraverse]
         local newCard = CardClass:new(drawX, drawY, 1, index)
         newCard.grabbable = false
-        table.insert(drawCards, newCard)
+        table.insert(wasteCards, newCard)
 
-        newCard.grabbable = (i == 3 or stackTraverse == #cardStack)
+        newCard.grabbable = (i == 3 or stackTraverse == #drawPile)
 
         drawX = drawX - 30
         stackTraverse = stackTraverse + 1

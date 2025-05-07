@@ -31,7 +31,7 @@ function checkForMouseMoving()
         card:checkForMouseOver(grabber)
     end
     
-    for _, card in ipairs(drawCards) do
+    for _, card in ipairs(wasteCards) do
         card:checkForMouseOver(grabber)
     end
 end

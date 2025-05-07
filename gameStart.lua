@@ -31,8 +31,8 @@ function GameClass:cards()
 
     cardBack = love.graphics.newImage("sprites/cardBack.png")
     
-    cardStack = {}
-    drawCards = {}
+    drawPile = {}
+    wasteCards = {}
     stackTraverse = 1
     mouseWasDown = false
 
@@ -64,7 +64,6 @@ function GameClass:cardTable()
     counter = 1
     shuffle(cards)
     for i = 7, 1, -1 do
-        table.insert(validPos, Vector(x, y))
             for j = i, 1, -1 do
                 if j == 1 then
                     faceUp = 1
@@ -81,7 +80,8 @@ function GameClass:cardTable()
     --draw
     stackCardTop = table.insert(cardTable, CardClass:new(840, 50, 0, 0))
     for i = counter, #cards do
-        table.insert(cardStack, i)
+        faceUp = 1
+        table.insert(drawPile, CardClass:new(x, y, faceUp, i))
     end
 
     return cardTable
@@ -94,11 +94,11 @@ function GameClass:update()
 
     checkForMouseMoving()
 
-    for i = #drawCards, 1, -1 do
-        local card = drawCards[i]
+    for i = #wasteCards, 1, -1 do
+        local card = wasteCards[i]
         card:update()
         
-        if card == drawCards[#drawCards] then
+        if card == wasteCards[#wasteCards] then
             card.grabbable = true
         end
 
@@ -108,8 +108,8 @@ function GameClass:update()
 
         if card.position.x ~= 740 and card.position.x ~= 710 and card.position.x ~= 680  and card.state == CARD_STATE.IDLE then
             table.insert(cardTable, card)
-            table.remove(drawCards, i)
-            table.remove(cardStack, cardStack[card])
+            table.remove(wasteCards, i)
+            table.remove(drawPile, stackTraverse)
         end
     end
 
@@ -126,8 +126,8 @@ function GameClass:update()
         end
     end
 
-    if #cardStack == 0 then
-        cardStackTop = nil
+    if #drawPile == 0 then
+        drawPileTop = nil
     end
 
     mouseWasDown = love.mouse.isDown(1)
@@ -157,7 +157,7 @@ function GameClass:draw()
         card:draw()  
     end
     
-    for _, card in ipairs(drawCards) do
+    for _, card in ipairs(wasteCards) do
         card:draw() 
     end
  
