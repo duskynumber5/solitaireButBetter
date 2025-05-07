@@ -80,8 +80,7 @@ function GameClass:cardTable()
     --draw
     stackCardTop = table.insert(cardTable, CardClass:new(840, 50, 0, 0))
     for i = counter, #cards do
-        faceUp = 1
-        table.insert(drawPile, CardClass:new(x, y, faceUp, i))
+        table.insert(drawPile, CardClass:new(x, y, 0, i))
     end
 
     return cardTable
@@ -109,7 +108,12 @@ function GameClass:update()
         if card.position.x ~= 740 and card.position.x ~= 710 and card.position.x ~= 680  and card.state == CARD_STATE.IDLE then
             table.insert(cardTable, card)
             table.remove(wasteCards, i)
-            table.remove(drawPile, stackTraverse)
+            for j = #drawPile, 1, -1 do
+                if drawPile[j] == card then
+                    table.remove(drawPile, j)
+                    break
+                end
+            end
         end
     end
 
@@ -157,8 +161,10 @@ function GameClass:draw()
         card:draw()  
     end
     
-    for _, card in ipairs(wasteCards) do
-        card:draw() 
+    if #wasteCards > 0 then
+        for _, card in ipairs(wasteCards) do
+            card:draw() 
+        end
     end
  
      love.graphics.setColor(1, 1, 1, 1)

@@ -106,13 +106,14 @@ function CardClass:draw3()
         end
 
         local index = drawPile[stackTraverse]
-        local newCard = CardClass:new(drawX, drawY, 1, index)
-        newCard.grabbable = false
-        table.insert(wasteCards, newCard)
+        index.grabbable = false
+        index.faceUp = 1
+        index.position.x = drawX - (30 * (#drawPile - i))
+        index.position.y = drawY
+        table.insert(wasteCards, index)
 
-        newCard.grabbable = (i == 3 or stackTraverse == #drawPile)
+        index.grabbable = (i == 3 or stackTraverse == #drawPile)
 
-        drawX = drawX - 30
         stackTraverse = stackTraverse + 1
     end
 end
