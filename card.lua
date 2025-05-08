@@ -99,7 +99,7 @@ function CardClass:draw3()
     local drawY = 50
 
     for i = #drawPile, #drawPile - 2, -1 do
-        if #drawPile == 0 then break end
+        if #drawPile == 0 and #wasteCards == 0 then break end
 
         if stackTraverse > #drawPile then
             stackTraverse = 1
@@ -112,7 +112,7 @@ function CardClass:draw3()
         index.position.y = drawY
         table.insert(wasteCards, index)
 
-        index.grabbable = (i == 3 or stackTraverse == #drawPile)
+        index.grabbable = (i == 3)
 
         stackTraverse = stackTraverse + 1
     end

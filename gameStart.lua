@@ -51,6 +51,8 @@ function GameClass:cards()
         {x = 366, y = 50, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
     }
 
+    gameOver = false
+
     return cards
 end
 
@@ -87,6 +89,18 @@ function GameClass:cardTable()
 end
 
 function GameClass:update()
+--[[
+    for _, card in ipairs(cardTable) do
+        if card.position.y > 249 then
+            break
+        elseif card.state ~= CARD_STATE.IDLE then
+            break
+        else
+            GameClass:endGame()
+        end
+    end
+]]--
+
     grabber:update()
 
     grabber.stackCard = nil
@@ -101,11 +115,11 @@ function GameClass:update()
             card.grabbable = true
         end
 
-        if card.state == CARD_STATE.MOUSE_OVER and love.mouse.isDown(1) and grabber.heldObject == nil and card.faceUp == 1 and card.grabbable then
+        if card.state == CARD_STATE.MOUSE_OVER and love.mouse.isDown(1) and grabber.heldObject == nil and card.grabbable then
             grabber:grab(card)
         end
 
-        if card.position.x ~= 740 and card.position.x ~= 710 and card.position.x ~= 680  and card.state == CARD_STATE.IDLE then
+        if card.position.y > 50 and card.state == CARD_STATE.IDLE or card.position.x < 500 and card.state == CARD_STATE.IDLE then
             table.insert(cardTable, card)
             table.remove(wasteCards, i)
             for j = #drawPile, 1, -1 do
@@ -176,4 +190,17 @@ function GameClass:draw()
         love.graphics.print("Card: " .. tostring(grabber.heldObject.suit) .. ", " .. tostring(grabber.heldObject.rank) .. ", " .. tostring(grabber.heldObject.color), 100, 100)
      end
 
+    if gameOver == true then
+
+    end
 end
+
+--[[
+function GameClass:endGame()
+    for _, card in ipairs(cardTable) do
+       card.grabbable = false 
+    end
+
+    gameOver = true
+end
+]]--
