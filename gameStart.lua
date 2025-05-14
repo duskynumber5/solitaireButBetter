@@ -14,8 +14,8 @@ function GameClass:cards()
 
     cards = {}
 
-    suits = {"S", "H", "D", "C"}
-    ranks = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"}
+    suits = {"spade", "heart", "diamond", "club"}
+    ranks = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"}
     
     for i=1, #suits do
         for j=1, #ranks do
