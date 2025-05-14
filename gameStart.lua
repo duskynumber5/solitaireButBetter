@@ -23,7 +23,7 @@ function GameClass:cards()
                 image = love.graphics.newImage("sprites/" .. suits[i] .. ranks[j] .. ".png"),
                 suit = suits[i],
                 rank = ranks[j],
-                color = (suits[i] == "S" or suits[i] == "C") and 1 or 0
+                color = (suits[i] == "spade" or suits[i] == "club") and 1 or 0
             }
             table.insert(cards, card)
         end
@@ -49,10 +49,6 @@ function GameClass:cards()
         {x = 146, y = 50, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
         {x = 256, y = 50, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
         {x = 366, y = 50, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
-    }
-
-    foundationPiles = {
-        {}, {}, {}, {}
     }
 
     gameOver = false
@@ -181,13 +177,8 @@ function GameClass:draw()
     end
  
      love.graphics.setColor(1, 1, 1, 1)
-     love.graphics.print("Mouse: " .. tostring(grabber.currentMousePos.x) .. ", " .. tostring(grabber.currentMousePos.y), 5)
-     love.graphics.print("Press 'R' to reset", 5, 15)
-     love.graphics.print("Press 'ESC' to quit", 5, 30)
-     
-     if grabber.heldObject then
-        love.graphics.print("Card: " .. tostring(grabber.heldObject.suit) .. ", " .. tostring(grabber.heldObject.rank) .. ", " .. tostring(grabber.heldObject.color), 100, 100)
-     end
+     love.graphics.print("Press 'R' to reset", 5, 10)
+     love.graphics.print("Press 'ESC' to quit", 5, 25)
 
     if gameOver == true then
         love.graphics.print("YOU WON!!!!!", 500, 400)

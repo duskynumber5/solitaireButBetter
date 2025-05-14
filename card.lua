@@ -53,8 +53,6 @@ function CardClass:draw()
         self.rank = cardFace.rank
         self.color = cardFace.color
     end
-
-    love.graphics.print(tostring(self.state), self.position.x + 20, self.position.y - 20)
 end
 
 function CardClass:checkForMouseOver()
