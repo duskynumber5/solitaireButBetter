@@ -112,8 +112,6 @@ function CardClass:draw3()
         index.position.y = drawY
         table.insert(wasteCards, index)
 
-        index.grabbable = (i == 3)
-
         stackTraverse = stackTraverse + 1
     end
 end

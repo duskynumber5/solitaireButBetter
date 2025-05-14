@@ -5,7 +5,7 @@ require "grabber"
 
 GameClass = {}
 
-love.window.setMode(1000, 640)
+love.window.setMode(1000, 800)
 love.graphics.setBackgroundColor(0, 0.7, 0.2, 1)
 love.window.setTitle("solitaire!")
 math.randomseed(os.time())
@@ -51,6 +51,10 @@ function GameClass:cards()
         {x = 366, y = 50, w = cards[3].image:getWidth() + 5, h = cards[3].image:getHeight() + 32},
     }
 
+    foundationPiles = {
+        {}, {}, {}, {}
+    }
+
     gameOver = false
 
     return cards
@@ -89,17 +93,12 @@ function GameClass:cardTable()
 end
 
 function GameClass:update()
---[[
-    for _, card in ipairs(cardTable) do
-        if card.position.y > 249 then
-            break
-        elseif card.state ~= CARD_STATE.IDLE then
-            break
-        else
-            GameClass:endGame()
+    GameClass:checkCards()
+    if gameOver == true then
+        for _, card in ipairs(cardTable) do
+            card.grabbable = false 
         end
     end
-]]--
 
     grabber:update()
 
@@ -144,10 +143,6 @@ function GameClass:update()
         end
     end
 
-    if #drawPile == 0 then
-        drawPileTop = nil
-    end
-
     mouseWasDown = love.mouse.isDown(1)
 end
 
@@ -170,10 +165,14 @@ function GameClass:draw()
          x = x + (110)
      end
  
-     
      for _, card in ipairs(cardTable) do
-        card:draw()  
-    end
+        if card == stackCardTop then
+            if #drawPile == 0 then
+                break
+            end 
+        end
+        card:draw()
+     end
     
     if #wasteCards > 0 then
         for _, card in ipairs(wasteCards) do
@@ -191,16 +190,29 @@ function GameClass:draw()
      end
 
     if gameOver == true then
-
+        love.graphics.print("YOU WON!!!!!", 500, 400)
+        love.graphics.print("PRESS 'R' TO RESTART", 500, 500)
     end
 end
 
---[[
-function GameClass:endGame()
+function GameClass:checkCards()
+    local cardsInSuitPiles = 0
+
     for _, card in ipairs(cardTable) do
-       card.grabbable = false 
+        if card.faceUp == 1 then
+            for i = 8, 11 do
+                local pos = validPos[i]
+                if card.position.x >= pos.x and card.position.x <= pos.x + pos.w and
+                   card.position.y >= pos.y and card.position.y <= pos.y + pos.h and 
+                   card.state == CARD_STATE.IDLE then
+                    cardsInSuitPiles = cardsInSuitPiles + 1
+                    break
+                end
+            end
+        end
     end
 
-    gameOver = true
+    if cardsInSuitPiles == 52 and #drawPile == 0 then
+        gameOver = true
+    end
 end
-]]--

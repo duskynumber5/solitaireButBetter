@@ -61,7 +61,7 @@ function GrabberClass:grab(card)
         self.heldObject.position.y
     )
 
-    if card.position.y > 50 then
+    if card.position.y > 50 or card.position.x < 500 then
         for _, c in ipairs(self.heldStack) do
             for i = #cardTable, 1, -1 do
                 if cardTable[i] == c then
@@ -89,7 +89,8 @@ function GrabberClass:release()
     if self.stackCard then
         if self.stackCard.position.x < 500 and self.stackCard.position.y == 50 then
             if self.stackCard.suit == self.heldObject.suit and 
-            getRankIndex(self.stackCard.rank) == getRankIndex(self.heldObject.rank) - 1 then
+            getRankIndex(self.stackCard.rank) == getRankIndex(self.heldObject.rank) - 1 
+            and #self.heldStack <= 1 then
                 isValidReleasePosition = true
                 self.heldObject.position.x = self.stackCard.position.x
                 self.heldObject.position.y = self.stackCard.position.y
