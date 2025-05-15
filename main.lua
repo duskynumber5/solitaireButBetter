@@ -9,6 +9,9 @@ function love.load()
     cardTable = GameClass:cardTable()
 
     grabber = GrabberClass:new()
+
+    black = {0, 0, 0, 0.7}
+    white = {1, 1, 1, 1}
 end
 
 function love.update()

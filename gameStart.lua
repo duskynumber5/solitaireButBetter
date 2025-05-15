@@ -181,13 +181,30 @@ function GameClass:draw()
         end
     end
  
-     love.graphics.setColor(1, 1, 1, 1)
-     love.graphics.print("Press 'R' to reset", 5, 10)
-     love.graphics.print("Press 'ESC' to quit", 5, 25)
+    if not gameOver then
+        love.graphics.setColor(white)
+        love.graphics.print("Press 'R' to reset", 5, 10)
+        love.graphics.print("Press 'ESC' to quit", 5, 25)
+    end
 
     if gameOver == true then
-        love.graphics.print("YOU WON!!!!!", 500, 400)
-        love.graphics.print("PRESS 'R' TO RESTART", 500, 500)
+        love.graphics.setColor(black)
+        love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+    
+        love.graphics.setColor(white)
+        love.graphics.setFont(love.graphics.newFont(40))
+    
+        local win = "YOU WIN!"
+        local reset = "Press R to Restart"
+    
+        local screenWidth = love.graphics.getWidth()
+        local screenHeight = love.graphics.getHeight()
+    
+        local textWidth = love.graphics.getFont():getWidth(win)
+        local textHeight = love.graphics.getFont():getHeight()
+    
+        love.graphics.print(win, (screenWidth - textWidth) / 2, screenHeight / 2 - textHeight)
+        love.graphics.print(reset, (screenWidth - love.graphics.getFont():getWidth(reset)) / 2, screenHeight / 2 + 20)
     end
 end
 
