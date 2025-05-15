@@ -161,14 +161,19 @@ function GameClass:draw()
          x = x + (110)
      end
  
-     for _, card in ipairs(cardTable) do
-        if card == stackCardTop then
-            if #drawPile == 0 then
+     if #drawPile == 0 then
+        for i = #cardTable, 1, -1 do
+            local card = cardTable[i]
+            if card.position.x == 840 and card.position.y == 50 then
+                table.remove(cardTable, i)
                 break
-            end 
+            end
         end
-        card:draw()
-     end
+    end
+
+    for _, card in ipairs(cardTable) do
+       card:draw()
+    end
     
     if #wasteCards > 0 then
         for _, card in ipairs(wasteCards) do
@@ -203,7 +208,7 @@ function GameClass:checkCards()
         end
     end
 
-    if cardsInSuitPiles == 52 and #drawPile == 0 then
+    if cardsInSuitPiles == 53 and #drawPile == 0 then
         gameOver = true
     end
 end
