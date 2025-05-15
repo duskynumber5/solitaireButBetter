@@ -6,19 +6,13 @@ Name: Maddison Lobo
 Programming Patterns
 
     State patterns
-        I used state patterns to track card states between idle, mouse over, and grabbed. This made it easy
-        to make the cards or the grabber react differently depending on the state of the card. It also differentiates
-        how the cards react different when they are simply hovered over verses actaully grabbed. 
+        I used state patterns to track card states between idle, mouse over, and grabbed. This made it easy to make the cards or the grabber react differently depending on the state of the card. It also differentiates how the cards react different when they are simply hovered over verses actaully grabbed. 
 
     Observer patterns
-        I used these patterns in order to track mouse movement and which cards had the mouse over it at what time. 
-        It helped by allowing each card to act and process the input detection independently. This also allows for features
-        like the shadow and any other features I may add. 
+        I used these patterns in order to track mouse movement and which cards had the mouse over it at what time. It helped by allowing each card to act and process the input detection independently. This also allows for features like the shadow and any other features I may add. 
 
     Sequencing patterns
-        I used these to iterate over the differnt tables of cards I have whether its loading sprites, placing cards, shuffling
-        them, or drawing from the stack. This made it easy to get all the cards in a couple lines as well as make the effect or
-        action uniform. 
+        I used these to iterate over the differnt tables of cards I have whether its loading sprites, placing cards, shuffling them, or drawing from the stack. This made it easy to get all the cards in a couple lines as well as make the effect or action uniform. 
 
 
 Code Feedback
